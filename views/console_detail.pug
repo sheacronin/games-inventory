@@ -1,0 +1,12 @@
+extends layout 
+
+block content 
+
+    p= gameConsole.developer
+    h1= title
+
+    each game in games
+        div
+            h2
+                a(href=game.url) #{game.name} 
+            p= game.description
