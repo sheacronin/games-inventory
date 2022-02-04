@@ -2,7 +2,17 @@ const Game = require('../models/game');
 
 // Display detail page of game
 exports.gameDetail = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game detail: ' + req.params.id);
+    Game.findById(req.params.id)
+        .populate('gameConsoles')
+        .exec((err, game) => {
+            if (err) return next(err);
+            if (game == null) {
+                var err = new Error('Game not found');
+                err.status = 404;
+                return next(err);
+            }
+            res.render('game_detail', { title: game.name, game });
+        });
 };
 
 // Display game create page on GET

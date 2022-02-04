@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+
+    h1= title
+    p= game.description 
+    p Price: $#{game.price}
+    p In Stock: #{game.numberInStock}
+
+    h2 Consoles:
+
+    ul
+        each console in game.gameConsoles
+            li
+                a(href=console.url) #{console.name}
+        
