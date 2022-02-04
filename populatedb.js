@@ -13,10 +13,8 @@ if (!userArgs[0].startsWith('mongodb')) {
 }
 */
 var async = require('async');
-var Book = require('./models/book');
-var Author = require('./models/author');
-var Genre = require('./models/genre');
-var BookInstance = require('./models/bookinstance');
+var Game = require('./models/game');
+var GameConsole = require('./models/gameConsole');
 
 var mongoose = require('mongoose');
 var mongoDB = userArgs[0];
@@ -25,200 +23,126 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var authors = [];
-var genres = [];
-var books = [];
-var bookinstances = [];
+var gameConsoles = [];
+var games = [];
 
-function authorCreate(first_name, family_name, d_birth, d_death, cb) {
-    authordetail = { first_name: first_name, family_name: family_name };
-    if (d_birth != false) authordetail.date_of_birth = d_birth;
-    if (d_death != false) authordetail.date_of_death = d_death;
+function gameConsoleCreate(name, developer, description, cb) {
+    gameConsoleDetail = { name, developer, description };
 
-    var author = new Author(authordetail);
+    var gameConsole = new GameConsole(gameConsoleDetail);
 
-    author.save(function (err) {
+    gameConsole.save(function (err) {
         if (err) {
             cb(err, null);
             return;
         }
-        console.log('New Author: ' + author);
-        authors.push(author);
-        cb(null, author);
+        console.log('New Game Console: ' + gameConsole.name + gameConsole._id);
+        gameConsoles.push(gameConsole);
+        cb(null, console);
     });
 }
 
-function genreCreate(name, cb) {
-    var genre = new Genre({ name: name });
+function gameCreate(name, description, gameConsoles, price, numberInStock, cb) {
+    var game = new Game({
+        name,
+        description,
+        gameConsoles,
+        price,
+        numberInStock,
+    });
 
-    genre.save(function (err) {
+    game.save(function (err) {
         if (err) {
             cb(err, null);
             return;
         }
-        console.log('New Genre: ' + genre);
-        genres.push(genre);
-        cb(null, genre);
+        console.log('New Game: ' + game);
+        games.push(game);
+        cb(null, game);
     });
 }
 
-function bookCreate(title, summary, isbn, author, genre, cb) {
-    bookdetail = {
-        title: title,
-        summary: summary,
-        author: author,
-        isbn: isbn,
-    };
-    if (genre != false) bookdetail.genre = genre;
-
-    var book = new Book(bookdetail);
-    book.save(function (err) {
-        if (err) {
-            cb(err, null);
-            return;
-        }
-        console.log('New Book: ' + book);
-        books.push(book);
-        cb(null, book);
-    });
-}
-
-function bookInstanceCreate(book, imprint, due_back, status, cb) {
-    bookinstancedetail = {
-        book: book,
-        imprint: imprint,
-    };
-    if (due_back != false) bookinstancedetail.due_back = due_back;
-    if (status != false) bookinstancedetail.status = status;
-
-    var bookinstance = new BookInstance(bookinstancedetail);
-    bookinstance.save(function (err) {
-        if (err) {
-            console.log('ERROR CREATING BookInstance: ' + bookinstance);
-            cb(err, null);
-            return;
-        }
-        console.log('New BookInstance: ' + bookinstance);
-        bookinstances.push(bookinstance);
-        cb(null, book);
-    });
-}
-
-function createGenreAuthors(cb) {
-    async.series(
-        [
-            function (callback) {
-                authorCreate(
-                    'Patrick',
-                    'Rothfuss',
-                    '1973-06-06',
-                    false,
-                    callback
-                );
-            },
-            function (callback) {
-                authorCreate('Ben', 'Bova', '1932-11-8', false, callback);
-            },
-            function (callback) {
-                authorCreate(
-                    'Isaac',
-                    'Asimov',
-                    '1920-01-02',
-                    '1992-04-06',
-                    callback
-                );
-            },
-            function (callback) {
-                authorCreate('Bob', 'Billings', false, false, callback);
-            },
-            function (callback) {
-                authorCreate('Jim', 'Jones', '1971-12-16', false, callback);
-            },
-            function (callback) {
-                genreCreate('Fantasy', callback);
-            },
-            function (callback) {
-                genreCreate('Science Fiction', callback);
-            },
-            function (callback) {
-                genreCreate('French Poetry', callback);
-            },
-        ],
-        // optional callback
-        cb
-    );
-}
-
-function createBooks(cb) {
+function createGameConsoles(cb) {
     async.parallel(
         [
             function (callback) {
-                bookCreate(
-                    'The Name of the Wind (The Kingkiller Chronicle, #1)',
-                    'I have stolen princesses back from sleeping barrow kings. I burned down the town of Trebon. I have spent the night with Felurian and left with both my sanity and my life. I was expelled from the University at a younger age than most people are allowed in. I tread paths by moonlight that others fear to speak of during day. I have talked to Gods, loved women, and written songs that make the minstrels weep.',
-                    '9781473211896',
-                    authors[0],
-                    [genres[0]],
+                // 0
+                gameConsoleCreate(
+                    'GameCube',
+                    'Nintendo',
+                    'The GameCube is a home video game console developed and released by Nintendo in Japan on September 14, 2001, in North America on November 18, 2001, and in PAL territories in 2002.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    "The Wise Man's Fear (The Kingkiller Chronicle, #2)",
-                    'Picking up the tale of Kvothe Kingkiller once again, we follow him into exile, into political intrigue, courtship, adventure, love and magic... and further along the path that has turned Kvothe, the mightiest magician of his age, a legend in his own time, into Kote, the unassuming pub landlord.',
-                    '9788401352836',
-                    authors[0],
-                    [genres[0]],
+                // 1
+                gameConsoleCreate(
+                    'Wii',
+                    'Nintendo',
+                    'The Wii is a home video game console developed and marketed by Nintendo. It was first released on November 19, 2006, in North America and in December 2006 for most other regions of the world.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    'The Slow Regard of Silent Things (Kingkiller Chronicle)',
-                    'Deep below the University, there is a dark place. Few people know of it: a broken web of ancient passageways and abandoned rooms. A young woman lives there, tucked among the sprawling tunnels of the Underthing, snug in the heart of this forgotten place.',
-                    '9780756411336',
-                    authors[0],
-                    [genres[0]],
+                // 2
+                gameConsoleCreate(
+                    'Switch',
+                    'Nintendo',
+                    'The Nintendo Switch is a video game console developed by Nintendo and released worldwide in most regions on March 3, 2017.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    'Apes and Angels',
-                    'Humankind headed out to the stars not for conquest, nor exploration, nor even for curiosity. Humans went to the stars in a desperate crusade to save intelligent life wherever they found it. A wave of death is spreading through the Milky Way galaxy, an expanding sphere of lethal gamma ...',
-                    '9780765379528',
-                    authors[1],
-                    [genres[1]],
+                // 3
+                gameConsoleCreate(
+                    'Xbox Series X/S',
+                    'Microsoft',
+                    'The Xbox Series X and the Xbox Series S (collectively, the Xbox Series X/S) are home video game consoles developed by Microsoft. They were both released on November 10, 2020, as the fourth generation of the Xbox console family.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    'Death Wave',
-                    "In Ben Bova's previous novel New Earth, Jordan Kell led the first human mission beyond the solar system. They discovered the ruins of an ancient alien civilization. But one alien AI survived, and it revealed to Jordan Kell that an explosion in the black hole at the heart of the Milky Way galaxy has created a wave of deadly radiation, expanding out from the core toward Earth. Unless the human race acts to save itself, all life on Earth will be wiped out...",
-                    '9780765379504',
-                    authors[1],
-                    [genres[1]],
+                // 4
+                gameConsoleCreate(
+                    'Xbox One',
+                    'Microsoft',
+                    'The Xbox One is a line of home video game consoles developed by Microsoft. Announced in May 2013, it is the successor to Xbox 360 and the third base console in the Xbox series of video game consoles.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    'Test Book 1',
-                    'Summary of test book 1',
-                    'ISBN111111',
-                    authors[4],
-                    [genres[0], genres[1]],
+                // 5
+                gameConsoleCreate(
+                    'Playstation 5',
+                    'Sony',
+                    'The PlayStation 5 (PS5) is a home video game console developed by Sony Interactive Entertainment. Announced in 2019 as the successor to the PlayStation 4, the PS5 was released on November 12, 2020, in Australia, Japan, New Zealand, North America, and South Korea, with worldwide release following a week later.',
                     callback
                 );
             },
             function (callback) {
-                bookCreate(
-                    'Test Book 2',
-                    'Summary of test book 2',
-                    'ISBN222222',
-                    authors[4],
-                    false,
+                // 6
+                gameConsoleCreate(
+                    'Playstation 4',
+                    'Sony',
+                    'The PlayStation 4 (PS4) is a home video game console developed by Sony Computer Entertainment. Announced as the successor to the PlayStation 3 in February 2013, it was launched on November 15, 2013, in North America, November 29, 2013 in Europe, South America and Australia, and on February 22, 2014 in Japan.',
+                    callback
+                );
+            },
+            function (callback) {
+                // 7
+                gameConsoleCreate(
+                    'Playstation 3',
+                    'Sony',
+                    'The PlayStation 3 (PS3) is a home video game console developed by Sony Computer Entertainment. The successor to PlayStation 2, it is part of the PlayStation brand of consoles. It was first released on November 11, 2006, in Japan,[9] November 17, 2006, in North America, and March 23, 2007, in Europe and Australia',
+                    callback
+                );
+            },
+            function (callback) {
+                // 8
+                gameConsoleCreate(
+                    'Xbox 360',
+                    'Microsoft',
+                    'The Xbox 360 is a home video game console developed by Microsoft. As the successor to the original Xbox, it is the second console in the Xbox series.',
                     callback
                 );
             },
@@ -228,122 +152,116 @@ function createBooks(cb) {
     );
 }
 
-function createBookInstances(cb) {
+function createGames(cb) {
     async.parallel(
         [
             function (callback) {
-                bookInstanceCreate(
-                    books[0],
-                    'London Gollancz, 2014.',
-                    false,
-                    'Available',
+                gameCreate(
+                    'Dragon Age: Origins',
+                    'Dragon Age: Origins is a role-playing game developed by BioWare and published by Electronic Arts. It is the first game in the Dragon Age franchise. Set in the fictional kingdom of Ferelden during a period of civil strife, the game puts the player in the role of a warrior, mage, or rogue coming from an elven, human, or dwarven background.',
+                    [gameConsoles[7], gameConsoles[8]],
+                    10,
+                    3,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[1],
-                    ' Gollancz, 2011.',
-                    false,
-                    'Loaned',
+                gameCreate(
+                    'Life is Strange: True Colors',
+                    `Life Is Strange: True Colors is a graphic adventure video game developed by Deck Nine and published by Square Enix's European subsidiary. The plot focuses on Alex Chen, a young woman who can experience the emotions of others, as she tries to solve the mystery behind her brother's death.`,
+                    [
+                        gameConsoles[3],
+                        gameConsoles[4],
+                        gameConsoles[5],
+                        gameConsoles[6],
+                    ],
+                    60,
+                    10,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[2],
-                    ' Gollancz, 2015.',
-                    false,
-                    false,
+                gameCreate(
+                    'Dragon Age: Inquisition',
+                    'Dragon Age: Inquisition is a 2014 action role-playing video game developed by BioWare and published by Electronic Arts. The third major game in the Dragon Age franchise, Inquisition is the sequel to Dragon Age II (2011). The story follows a player character known as the Inquisitor on a journey to settle the civil unrest in the continent of Thedas and close a mysterious tear in the sky called the "Breach", which is unleashing dangerous demons upon the world.',
+                    [
+                        gameConsoles[7],
+                        gameConsoles[8],
+                        gameConsoles[4],
+                        gameConsoles[6],
+                    ],
+                    40,
+                    5,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[3],
-                    'New York Tom Doherty Associates, 2016.',
-                    false,
-                    'Available',
+                gameCreate(
+                    'Kingdom Hearts III',
+                    `Kingdom Hearts III is a 2019 action role-playing game developed and published by Square Enix. It is the twelfth installment in the Kingdom Hearts series, and serves as a conclusion of the "Dark Seeker Saga" story arc that began with the original game.`,
+                    [gameConsoles[6], gameConsoles[4], gameConsoles[2]],
+                    60,
+                    11,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[3],
-                    'New York Tom Doherty Associates, 2016.',
-                    false,
-                    'Available',
+                gameCreate(
+                    'New Pokémon Snap',
+                    'New Pokémon Snap[a] is an on-rails first-person photography game developed by Bandai Namco Studios and published by Nintendo and The Pokémon Company.',
+                    [gameConsoles[2]],
+                    60,
+                    20,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[3],
-                    'New York Tom Doherty Associates, 2016.',
-                    false,
-                    'Available',
+                gameCreate(
+                    'Kingdom Hearts',
+                    `Kingdom Hearts is a crossover of various Disney properties based in an original fictional universe. The series centers on the main character, Sora, and his journey and experiences with various Disney and Pixar characters, as well as some from Square Enix properties, such as Final Fantasy, The World Ends With You, and Einhänder, in addition to original characters and locations created specifically for the series.`,
+                    [
+                        gameConsoles[2],
+                        gameConsoles[4],
+                        gameConsoles[7],
+                        gameConsoles[6],
+                    ],
+                    20,
+                    4,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[4],
-                    'New York, NY Tom Doherty Associates, LLC, 2015.',
-                    false,
-                    'Available',
+                gameCreate(
+                    'Mario Kart Wii',
+                    'Mario Kart Wii[a] is a 2008 kart racing video game developed and published by Nintendo for the Wii. It is the sixth installment in the Mario Kart series. Mario Kart Wii was released worldwide in April 2008.',
+                    [gameConsoles[1]],
+                    35,
+                    4,
                     callback
                 );
             },
             function (callback) {
-                bookInstanceCreate(
-                    books[4],
-                    'New York, NY Tom Doherty Associates, LLC, 2015.',
-                    false,
-                    'Maintenance',
-                    callback
-                );
-            },
-            function (callback) {
-                bookInstanceCreate(
-                    books[4],
-                    'New York, NY Tom Doherty Associates, LLC, 2015.',
-                    false,
-                    'Loaned',
-                    callback
-                );
-            },
-            function (callback) {
-                bookInstanceCreate(
-                    books[0],
-                    'Imprint XXX2',
-                    false,
-                    false,
-                    callback
-                );
-            },
-            function (callback) {
-                bookInstanceCreate(
-                    books[1],
-                    'Imprint XXX3',
-                    false,
-                    false,
+                gameCreate(
+                    'Animal Crossing',
+                    `Animal Crossing is an endless and non-linear game in which a human takes up residence in a village inhabited by anthropomorphic animals. The main goal of the game is to save money in order to pay off the mortgage on the human's house.`,
+                    [gameConsoles[0]],
+                    500,
+                    1,
                     callback
                 );
             },
         ],
-        // Optional callback
+        // optional callback
         cb
     );
 }
 
 async.series(
-    [createGenreAuthors, createBooks, createBookInstances],
+    [createGameConsoles, createGames],
     // Optional callback
     function (err, results) {
         if (err) {
             console.log('FINAL ERR: ' + err);
-        } else {
-            console.log('BOOKInstances: ' + bookinstances);
         }
         // All done, disconnect from database
         mongoose.connection.close();

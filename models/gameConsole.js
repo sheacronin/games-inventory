@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const ConsoleSchema = new Schema({
+const GameConsoleSchema = new Schema({
     name: { type: String, required: true, minLength: 2, maxLength: 100 },
+    developer: { type: String, required: true },
     description: { type: String, required: true },
 });
 
-ConsoleSchema.virtual('url').get(function () {
+GameConsoleSchema.virtual('url').get(function () {
     return '/console/' + this._id;
 });
 
-module.exports = mongoose.model('Console', ConsoleSchema);
+module.exports = mongoose.model('GameConsole', GameConsoleSchema);
