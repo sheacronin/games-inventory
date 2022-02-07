@@ -15,7 +15,7 @@ block content
             option(value='Sony' selected=(gameConsole !== undefined && gameConsole.developer === 'Sony' ? 'selected' : false)) Sony
 
         label(for='description') Description of Console:
-        textarea#description(name='description' value=(gameConsole === undefined ? '' : gameConsole.description) required='true')
+        textarea#description(name='description' required='true') #{gameConsole === undefined ? '' : gameConsole.description}
 
         button(type='submit') Submit Console
 

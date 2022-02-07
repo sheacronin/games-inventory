@@ -149,10 +149,68 @@ exports.gameConsoleDeletePost = (req, res) => {
 
 // Display console update form on GET
 exports.gameConsoleUpdateGet = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console update GET');
+    GameConsole.findById(req.params.id).exec((err, gameConsole) => {
+        if (err) return next(err);
+        if (gameConsole == null) {
+            var err = new Error('Game console not found');
+            err.status = 404;
+            return next(err);
+        }
+
+        res.render('console_form', { title: 'Update console', gameConsole });
+    });
 };
 
 // Handle conosle update on POST
-exports.gameConsoleUpdatePost = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console update POST');
-};
+exports.gameConsoleUpdatePost = [
+    body('name', 'Name must be specified')
+        .trim()
+        .isLength({ min: 2, max: 100 })
+        .escape(),
+    body('description', 'Description must be specified')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('developer', 'Developer must be specified').trim().escape(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        const gameConsole = new GameConsole({
+            name: req.body.name,
+            description: req.body.description,
+            developer: req.body.developer,
+            _id: req.params.id,
+        });
+
+        if (!errors.isEmpty()) {
+            res.render('console_form', {
+                title: 'Add a console',
+                gameConsole,
+                errors: errors.array(),
+            });
+            return;
+        } else {
+            GameConsole.findOne({ name: gameConsole.name }).exec(
+                (err, foundGameConsole) => {
+                    if (err) return next(err);
+
+                    if (foundGameConsole) {
+                        res.redirect(foundGameConsole.url);
+                    } else {
+                        GameConsole.findByIdAndUpdate(
+                            req.params.id,
+                            gameConsole,
+                            {},
+                            (err, thegameConsole) => {
+                                if (err) return next(err);
+
+                                res.redirect(thegameConsole.url);
+                            }
+                        );
+                    }
+                }
+            );
+        }
+    },
+];
