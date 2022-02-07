@@ -92,12 +92,31 @@ exports.gameCreatePost = [
 
 // Display game delete form on GET
 exports.gameDeleteGet = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game delete GET');
+    Game.findById(req.params.id)
+        .populate('gameConsoles')
+        .exec((err, game) => {
+            if (err) return next(err);
+
+            if (game == null) {
+                res.redirect('/');
+            }
+            res.render('game_delete', { title: 'Delete game', game });
+        });
 };
 
 // Handle game delete on POST
 exports.gameDeletePost = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game delete POST');
+    Game.findById(req.body.gameid)
+        .populate('gameConsoles')
+        .exec((err, game) => {
+            if (err) return next(err);
+
+            Game.findByIdAndRemove(req.body.gameid, function deleteGame(err) {
+                if (err) return next(err);
+
+                res.redirect('/');
+            });
+        });
 };
 
 // Display game update form on GET
