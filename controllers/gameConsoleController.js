@@ -99,12 +99,52 @@ exports.gameConsoleCreatePost = [
 
 // Display console delete form on GET
 exports.gameConsoleDeleteGet = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console delete GET');
+    async.parallel(
+        {
+            gameConsole: (callback) => {
+                GameConsole.findById(req.params.id).exec(callback);
+            },
+            consoleGames: (callback) => {
+                Game.find({ gameConsoles: req.params.id }).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) return next(err);
+
+            if (results.gameConsole == null) {
+                res.redirect('/consoles');
+            }
+
+            const { gameConsole, consoleGames } = results;
+            res.render('console_delete', {
+                title: 'Delete console',
+                gameConsole,
+                consoleGames,
+            });
+        }
+    );
 };
 
 // Handle console delete on POST
 exports.gameConsoleDeletePost = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console delete POST');
+    // Delete any games that are only available on this console.
+    Game.deleteMany({
+        gameConsoles: { $eq: [req.body.gameconsoleid] },
+    });
+
+    Game.updateMany(
+        { gameConsoles: req.body.gameconsoleid },
+        { $pull: { gameConsoles: req.params.gameconsoleid } }
+    );
+
+    GameConsole.findByIdAndRemove(
+        req.body.gameconsoleid,
+        function deleteGameConsole(err) {
+            if (err) return next(err);
+
+            res.redirect('/consoles');
+        }
+    );
 };
 
 // Display console update form on GET

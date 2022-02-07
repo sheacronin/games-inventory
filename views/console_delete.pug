@@ -1,0 +1,20 @@
+extends layout 
+
+block content 
+
+    h1= gameConsole.name
+
+    p Do you really want to delete this console?
+
+    p Deleting this console will remove its availability from the following games: 
+    p Games marked with * will be deleted, as they are not available on any other consoles.
+        ul
+        for game in consoleGames 
+            li= game.name
+                if (game.gameConsoles.length === 1) 
+                    span *
+
+    form(method='POST' action='')   
+        input#gameconsoleid(type='hidden', name='gameconsoleid', required='true', value=gameConsole._id)
+
+        button(type='submit') Delete
