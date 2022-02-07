@@ -1,0 +1,33 @@
+extends layout 
+
+block content 
+
+    h1= title
+
+    form(method='POST' action='')
+        label(for='name') Game Name:
+        input#name(type='text' name='name' value=(game === undefined ? '' : game.name) required='true')
+
+        label(for='description') Description of Game:
+        textarea#description(name='description' value=(game === undefined ? '' : game.description) required='true')
+
+        label(for='price') Price of Game (in US Dollars):
+        input#price(type='number' name='price' step='5' value=(game === undefined ? 0 : game.price) required='true')
+
+        label(for='numberInStock') Number in Stock:
+        input#numberInStock(type='number' name='numberInStock' value=(game === undefined ? 0 : game.numberInStock) required='true')
+
+        fieldset 
+            legend Consoles the game is available on:
+
+            for gameConsole in gameConsoles 
+                input(type='checkbox' name='gameConsoles' id=gameConsole._id value=gameConsole._id checked=gameConsole.checked)
+                label(for=gameConsole._id) #{gameConsole.name}
+
+        button(type='submit') Add Game
+
+    if errors
+        ul 
+            for error in errors
+                li!= error.msg
+        

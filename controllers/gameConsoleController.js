@@ -55,7 +55,10 @@ exports.gameConsoleCreatePost = [
         .trim()
         .isLength({ min: 2, max: 100 })
         .escape(),
-    body('description', 'Description must be specified').trim().escape(),
+    body('description', 'Description must be specified')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
     body('developer', 'Developer must be specified').trim().escape(),
 
     (req, res, next) => {

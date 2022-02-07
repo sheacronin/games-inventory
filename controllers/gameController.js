@@ -1,4 +1,6 @@
 const Game = require('../models/game');
+const GameConsole = require('../models/gameConsole');
+const { body, validationResult } = require('express-validator');
 
 // Display detail page of game
 exports.gameDetail = (req, res) => {
@@ -17,13 +19,76 @@ exports.gameDetail = (req, res) => {
 
 // Display game create page on GET
 exports.gameCreateGet = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game create GET');
+    GameConsole.find({}, 'name').exec((err, gameConsoles) => {
+        if (err) return next(err);
+
+        res.render('game_form', { title: 'Add a game', gameConsoles });
+    });
 };
 
 // Handle game create on POST
-exports.gameCreatePost = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game create POST');
-};
+exports.gameCreatePost = [
+    (req, res, next) => {
+        if (!(req.body.gameConsoles instanceof Array)) {
+            if (typeof req.body.gameConsoles === 'undefined') {
+                req.body.gameConsoles = [];
+            } else {
+                req.body.gameConsoles = new Array(req.body.gameConsoles);
+            }
+        }
+        next();
+    },
+
+    body('name', 'Name must be specified')
+        .trim()
+        .isLength({ min: 2, max: 100 })
+        .escape(),
+    body('description', 'Description must be specified')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('gameConsoles.*').escape(),
+    body('price', 'Price must be specified').escape(),
+    body('numberInStock', 'Number in stock must be specified').escape(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        const game = new Game({
+            name: req.body.name,
+            description: req.body.description,
+            gameConsoles: req.body.gameConsoles,
+            price: req.body.price,
+            numberInStock: req.body.numberInStock,
+        });
+
+        if (!errors.isEmpty()) {
+            GameConsole.find({}, 'name').exec((err, gameConsoles) => {
+                if (err) return next(err);
+
+                for (let i = 0; i < gameConsoles.length; i++) {
+                    if (game.gameConsoles.indexOf(gameConsoles[i]._id) > -1) {
+                        gameConsoles[i].checked = 'true';
+                    }
+                }
+
+                res.render('game_form', {
+                    title: 'Add a game',
+                    gameConsoles,
+                    game,
+                    errors: errors.array(),
+                });
+            });
+            return;
+        } else {
+            game.save((err) => {
+                if (err) return next(err);
+
+                res.redirect(game.url);
+            });
+        }
+    },
+];
 
 // Display game delete form on GET
 exports.gameDeleteGet = (req, res) => {
