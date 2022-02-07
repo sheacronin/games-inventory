@@ -3,7 +3,10 @@ extends layout
 block content 
 
     h1= title
-    img(src=('/images/' + game.posterFileName) alt='')
+    if (game.posterFileName)
+        img(src=('/images/' + game.posterFileName) alt='')
+    else 
+        img(src='/images/game-placeholder.png' alt='')
     p= game.description 
     p Price: $#{game.price}
     p In Stock: #{game.numberInStock}

@@ -5,6 +5,16 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 const path = require('path');
 
+// Display list of all games
+exports.gameList = (req, res) => {
+    Game.find()
+        .sort([['name', 'ascending']])
+        .exec((err, games) => {
+            if (err) return next(err);
+            res.render('game_list', { title: 'Games', games });
+        });
+};
+
 // Display detail page of game
 exports.gameDetail = (req, res) => {
     Game.findById(req.params.id)

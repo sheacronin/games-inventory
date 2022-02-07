@@ -39,6 +39,8 @@ router.post('/console/:id/delete', gameConsoleController.gameConsoleDeletePost);
 
 // Games
 
+router.get('/games', gameController.gameList);
+
 router.get('/game/create', gameController.gameCreateGet);
 router.post(
     '/game/create',

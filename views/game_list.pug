@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+
+    h1= title 
+
+    each game in games
+        div
+            h2
+                a(href=game.url) #{game.name} 
+            if (game.posterFileName)
+                img(src=('/images/' + game.posterFileName) alt='')
+            else 
+                img(src='/images/game-placeholder.png' alt='')
