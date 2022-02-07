@@ -1,6 +1,7 @@
 const GameConsole = require('../models/gameConsole');
 const Game = require('../models/game');
 const async = require('async');
+const { body, validationResult } = require('express-validator');
 
 // Display list of all consoles
 exports.gameConsoleList = (req, res) => {
@@ -45,13 +46,53 @@ exports.gameConsoleDetail = (req, res) => {
 
 // Display console create page on GET
 exports.gameConsoleCreateGet = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console create GET');
+    res.render('console_form', { title: 'Add a console' });
 };
 
 // Handle console create on POST
-exports.gameConsoleCreatePost = (req, res) => {
-    res.send('NOT IMPLEMENTED: Game console create POST');
-};
+exports.gameConsoleCreatePost = [
+    body('name', 'Name must be specified')
+        .trim()
+        .isLength({ min: 2, max: 100 })
+        .escape(),
+    body('description', 'Description must be specified').trim().escape(),
+    body('developer', 'Developer must be specified').trim().escape(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        const gameConsole = new GameConsole({
+            name: req.body.name,
+            description: req.body.description,
+            developer: req.body.developer,
+        });
+
+        if (!errors.isEmpty()) {
+            res.render('console_form', {
+                title: 'Add a console',
+                gameConsole,
+                errors: errors.array(),
+            });
+            return;
+        } else {
+            GameConsole.findOne({ name: gameConsole.name }).exec(
+                (err, foundGameConsole) => {
+                    if (err) return next(err);
+
+                    if (foundGameConsole) {
+                        res.redirect(foundGameConsole.url);
+                    } else {
+                        gameConsole.save((err) => {
+                            if (err) return next(err);
+
+                            res.redirect(gameConsole.url);
+                        });
+                    }
+                }
+            );
+        }
+    },
+];
 
 // Display console delete form on GET
 exports.gameConsoleDeleteGet = (req, res) => {

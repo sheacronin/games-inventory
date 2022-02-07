@@ -1,0 +1,26 @@
+extends layout 
+
+block content 
+
+    h1= title
+
+    form(method='POST' action='')
+        label(for='name') Console Name:
+        input#name(type='text' name='name' value=(gameConsole === undefined ? '' : gameConsole.name) required='true')
+
+        label(for='developer') Developer:
+        select#developer(name='developer' required='true')
+            option(value='Microsoft' selected=(gameConsole !== undefined && gameConsole.developer === 'Microsoft' ? 'selected' : false)) Microsoft
+            option(value='Nintendo' selected=(gameConsole !== undefined && gameConsole.developer === 'Nintendo' ? 'selected' : false)) Nintendo
+            option(value='Sony' selected=(gameConsole !== undefined && gameConsole.developer === 'Sony' ? 'selected' : false)) Sony
+
+        label(for='description') Description of Console:
+        textarea#description(name='description' value=(gameConsole === undefined ? '' : gameConsole.description) required='true')
+
+        button(type='submit') Add Console
+
+    if errors
+        ul 
+            for error in errors
+                li!= error.msg
+        
