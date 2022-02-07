@@ -9,7 +9,7 @@ block content
         input#name(type='text' name='name' value=(game === undefined ? '' : game.name) required='true')
 
         label(for='description') Description of Game:
-        textarea#description(name='description' value=(game === undefined ? '' : game.description) required='true')
+        textarea#description(name='description' required='true') #{game === undefined ? '' : game.description}
 
         label(for='price') Price of Game (in US Dollars):
         input#price(type='number' name='price' step='5' value=(game === undefined ? 0 : game.price) required='true')
@@ -24,7 +24,7 @@ block content
                 input(type='checkbox' name='gameConsoles' id=gameConsole._id value=gameConsole._id checked=gameConsole.checked)
                 label(for=gameConsole._id) #{gameConsole.name}
 
-        button(type='submit') Add Game
+        button(type='submit') Submit Game
 
     if errors
         ul 
