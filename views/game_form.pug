@@ -4,9 +4,12 @@ block content
 
     h1= title
 
-    form(method='POST' action='')
+    form(method='POST' action='' enctype='multipart/form-data')
         label(for='name') Game Name:
         input#name(type='text' name='name' value=(game === undefined ? '' : game.name) required='true')
+
+        label(for='poster') Game Poster: 
+        input#poster(type='file' name='poster' accept='image/png, image/jpeg')
 
         label(for='description') Description of Game:
         textarea#description(name='description' required='true') #{game === undefined ? '' : game.description}

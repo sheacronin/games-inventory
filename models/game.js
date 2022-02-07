@@ -10,6 +10,7 @@ const GameSchema = new Schema({
     ],
     price: { type: Number, required: true },
     numberInStock: { type: Number, required: true },
+    posterFileName: { type: String, required: false },
 });
 
 GameSchema.virtual('url').get(function () {

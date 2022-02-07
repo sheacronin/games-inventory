@@ -2,6 +2,8 @@ const Game = require('../models/game');
 const GameConsole = require('../models/gameConsole');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const fs = require('fs');
+const path = require('path');
 
 // Display detail page of game
 exports.gameDetail = (req, res) => {
@@ -61,6 +63,7 @@ exports.gameCreatePost = [
             gameConsoles: req.body.gameConsoles,
             price: req.body.price,
             numberInStock: req.body.numberInStock,
+            posterFileName: req.file.filename,
         });
 
         if (!errors.isEmpty()) {
@@ -203,6 +206,7 @@ exports.gameUpdatePost = [
             gameConsoles: req.body.gameConsoles,
             price: req.body.price,
             numberInStock: req.body.numberInStock,
+            posterFileName: req.file.filename,
             _id: req.params.id,
         });
 
@@ -225,6 +229,20 @@ exports.gameUpdatePost = [
             });
             return;
         } else {
+            Game.findById(req.params.id).exec((err, oldGame) => {
+                if (err) return next(err);
+                // Remove old poster image.
+                const oldImagePath = path.join(
+                    __dirname,
+                    '../public/images/',
+                    oldGame.posterFileName
+                );
+
+                fs.unlink(oldImagePath, (err) => {
+                    console.log(err);
+                });
+            });
+
             Game.findByIdAndUpdate(req.params.id, game, {}, (err, thegame) => {
                 if (err) return next(err);
 

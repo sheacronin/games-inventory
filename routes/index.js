@@ -2,6 +2,20 @@ var express = require('express');
 var router = express.Router();
 const gameController = require('../controllers/gameController');
 const gameConsoleController = require('../controllers/gameConsoleController');
+const path = require('path');
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../public/images'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '_' + file.originalname);
+    },
+});
+
+const upload = multer({ storage: storage });
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -26,12 +40,20 @@ router.post('/console/:id/delete', gameConsoleController.gameConsoleDeletePost);
 // Games
 
 router.get('/game/create', gameController.gameCreateGet);
-router.post('/game/create', gameController.gameCreatePost);
+router.post(
+    '/game/create',
+    upload.single('poster'),
+    gameController.gameCreatePost
+);
 
 router.get('/game/:id', gameController.gameDetail);
 
 router.get('/game/:id/update', gameController.gameUpdateGet);
-router.post('/game/:id/update', gameController.gameUpdatePost);
+router.post(
+    '/game/:id/update',
+    upload.single('poster'),
+    gameController.gameUpdatePost
+);
 
 router.get('/game/:id/delete', gameController.gameDeleteGet);
 router.post('/game/:id/delete', gameController.gameDeletePost);
