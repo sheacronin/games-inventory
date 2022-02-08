@@ -24,8 +24,9 @@ block content
             legend Consoles the game is available on:
 
             for gameConsole in gameConsoles 
-                input(type='checkbox' name='gameConsoles' id=gameConsole._id value=gameConsole._id checked=gameConsole.checked)
-                label(for=gameConsole._id) #{gameConsole.name}
+                div
+                    input(type='checkbox' name='gameConsoles' id=gameConsole._id value=gameConsole._id checked=gameConsole.checked)
+                    label(for=gameConsole._id) #{gameConsole.name}
 
         button(type='submit') Submit Game
 

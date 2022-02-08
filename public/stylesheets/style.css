@@ -95,3 +95,60 @@ main h1 {
 .game img {
     width: 100%;
 }
+
+/* Forms */
+
+form {
+    max-width: 600px;
+    background-color: #efefef;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 50px 40px 50px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+form input,
+form textarea,
+form select,
+form button {
+    max-width: 500px;
+    padding: 10px;
+    border: 1px solid #4281a4;
+    font: inherit;
+}
+
+form label,
+form fieldset,
+form legend {
+    margin: 10px 0;
+}
+
+form textarea {
+    height: 150px;
+    resize: none;
+}
+
+form button {
+    margin-top: 20px;
+    border: none;
+    background-color: #c1666b;
+    color: white;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+}
+
+fieldset div {
+    display: flex;
+    align-items: center;
+}
+
+fieldset input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
