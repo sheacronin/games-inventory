@@ -1,18 +1,24 @@
 doctype html
 html
   head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title= title
+    link(rel='stylesheet', href='/stylesheets/reset.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header
-      h1 Video Game Inventory
+      h1.title Video Game Inventory
       nav
-        li
-          a(href='/consoles') See all consoles 
-        li 
-          a(href='/games') See all games
-        li
-          a(href='/console/create') Add a new console
-        li
-          a(href='/game/create') Add a new game
-    block content
+        ul
+          li
+            a(href='/consoles') See all consoles 
+          li 
+            a(href='/games') See all games
+          li
+            a(href='/console/create') Add a new console
+          li
+            a(href='/game/create') Add a new game
+
+    main
+      block content

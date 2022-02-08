@@ -242,15 +242,17 @@ exports.gameUpdatePost = [
             Game.findById(req.params.id).exec((err, oldGame) => {
                 if (err) return next(err);
                 // Remove old poster image.
-                const oldImagePath = path.join(
-                    __dirname,
-                    '../public/images/',
-                    oldGame.posterFileName
-                );
+                if (oldGame.posterFileName) {
+                    const oldImagePath = path.join(
+                        __dirname,
+                        '../public/images/',
+                        oldGame.posterFileName
+                    );
 
-                fs.unlink(oldImagePath, (err) => {
-                    console.log(err);
-                });
+                    fs.unlink(oldImagePath, (err) => {
+                        console.log(err);
+                    });
+                }
             });
 
             Game.findByIdAndUpdate(req.params.id, game, {}, (err, thegame) => {
