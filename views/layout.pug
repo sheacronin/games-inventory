@@ -8,8 +8,13 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header
-      h1.title Video Game Inventory
       nav
+        h1.title 
+          a(href='/') Video Game Inventory
+        button.toggle-button
+          div.bar
+          div.bar
+          div.bar
         ul
           li
             a(href='/consoles') See all consoles 
@@ -22,3 +27,5 @@ html
 
     main
       block content
+
+    script(src='/javascripts/toggleMenu.js' type='text/javascript')
