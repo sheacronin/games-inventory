@@ -4,9 +4,10 @@ block content
 
     h1= title 
 
-    each gameConsole in gameConsoles
-        div
-            h2
-                a(href=gameConsole.url) #{gameConsole.name} 
-            p= gameConsole.developer
-            p= gameConsole.description
+    div.games-list
+        each gameConsole in gameConsoles
+            div.console
+                h2
+                    a(href=gameConsole.url) #{gameConsole.name} 
+                p.developer= gameConsole.developer
+                p= gameConsole.description

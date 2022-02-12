@@ -1,16 +1,25 @@
 /* General Styles */
 
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+:root {
+    --off-white: #f3f0ec;
+    --primary-color: #c1666b;
+    --primary-color-dark: #a85358;
+    --secondary-color: #4281a4;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
-    background-color: #e4dfda;
-    font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+    background-color: var(--off-white);
+    font: 16px 'Rubik', Helvetica, Arial, sans-serif;
 }
 
 a {
-    color: #4281a4;
+    color: var(--secondary-color);
 }
 
 h1 {
@@ -32,11 +41,12 @@ button:hover {
 header {
     position: fixed;
     top: 0;
-    background-color: #e4dfda;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
 nav {
-    background-color: #c1666b;
+    background-color: var(--primary-color);
     color: white;
     width: 100vw;
     display: flex;
@@ -57,16 +67,18 @@ nav a {
     text-decoration: none;
 }
 
-nav li:hover {
-    background-color: #a85358;
-}
-
 nav li a {
     text-transform: uppercase;
     display: flex;
     height: 70px;
     align-items: center;
     padding: 0 20px;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+nav li a:hover {
+    color: var(--off-white);
+    background-color: var(--primary-color-dark);
 }
 
 .toggle-button {
@@ -94,7 +106,7 @@ nav li a {
         flex-direction: column;
         position: absolute;
         top: 70px;
-        background-color: #c1666b;
+        background-color: var(--primary-color);
         right: 0;
         width: 50%;
         transform: translateX(100%);
@@ -146,6 +158,8 @@ main h1 {
 
 .game {
     text-align: center;
+    background-color: #fafafa;
+    border-radius: 20px 20px 0 0;
 }
 
 .game a {
@@ -160,7 +174,6 @@ main h1 {
 }
 
 .game h2 {
-    background-color: #efefef;
     padding: 15px 10px;
     border-radius: 20px 20px 0 0;
 }
@@ -173,15 +186,104 @@ main h1 {
     background-position: center;
 }
 
-.game img {
-    width: 100%;
+.console {
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+}
+
+.developer {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+/* Game Detail */
+.game-detail {
+    display: grid;
+    max-width: 650px;
+    margin: 20px auto;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-areas:
+        'game-image desc desc'
+        'game-image price stock'
+        'game-image consoles consoles'
+        'update delete delete';
+    gap: 20px;
+}
+
+@media (max-width: 550px) {
+    .game-detail {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            'game-image game-image'
+            'desc desc'
+            'price stock'
+            'consoles consoles'
+            'update delete';
+    }
+}
+
+.game-detail img {
+    grid-area: game-image;
+    justify-self: center;
+    width: 265px;
+}
+
+.price {
+    grid-area: price;
+    justify-self: center;
+}
+
+.stock {
+    grid-area: stock;
+    justify-self: center;
+}
+
+.game-description {
+    grid-area: desc;
+}
+
+.game-consoles {
+    grid-area: consoles;
+}
+
+.game-btns {
+    padding: 15px 10px;
+    border-radius: 20px;
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 5px var(--primary-color-dark);
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-out,
+        box-shadow 0.3s ease-in-out;
+}
+
+.game-btns:hover {
+    background-color: var(--primary-color-dark);
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.update-game-btn {
+    grid-area: update;
+}
+
+.delete-game-btn {
+    grid-area: delete;
 }
 
 /* Forms */
 
 form {
     max-width: 600px;
-    background-color: #efefef;
+    background-color: #fafafa;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
@@ -213,7 +315,7 @@ form textarea {
 form button {
     margin-top: 20px;
     border: none;
-    background-color: #c1666b;
+    background-color: var(--primary-color);
     color: white;
 }
 
