@@ -5,6 +5,26 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 const path = require('path');
 
+exports.index = (req, res) => {
+    async.parallel(
+        {
+            gameCount: (callback) => {
+                Game.countDocuments({}, callback);
+            },
+            gameConsoleCount: (callback) => {
+                GameConsole.countDocuments({}, callback);
+            },
+        },
+        (err, results) => {
+            res.render('index', {
+                title: 'Check Out Our Video Games',
+                error: err,
+                data: results,
+            });
+        }
+    );
+};
+
 // Display list of all games
 exports.gameList = (req, res) => {
     Game.find()

@@ -11,7 +11,5 @@ block content
                     h2 #{game.name} 
                     if (game.posterFileName)
                         div.game-poster(style=`background-image: url(/images/${game.posterFileName}`)
-                        //- img(src=('/images/' + game.posterFileName) alt='')
                     else 
                         div.game-poster(style=`background-image: url(/images/game-placeholder.png`)
-                        //- img(src='/images/game-placeholder.png' alt='')

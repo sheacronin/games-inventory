@@ -2,4 +2,10 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  section.welcome
+    div
+      p Welcome to our Video Game Inventory! Click the links above to browse #[a(href='/consoles') our games by console], or browse #[a(href='/games') all our games at once]! Feel free to add to our inventory with #[a(href='console/create') new consoles] and #[a(href='game/create') new games], or update our existing inventory.
+      ul
+        li Consoles in our inventory: #{data.gameConsoleCount}
+        li Games in our inventory: #{data.gameCount}
+    img(src='images/vg-background.jpeg')

@@ -5,14 +5,18 @@ block content
     p= gameConsole.developer
     h1= title
 
-    each game in games
-        div
-            h2
-                a(href=game.url) #{game.name} 
-            p= game.description
+    section(class='games-list')
+        each game in games
+            div.game
+                a(href=game.url)
+                    h2 #{game.name} 
+                    if (game.posterFileName)
+                        div.game-poster(style=`background-image: url(/images/${game.posterFileName}`)
+                    else 
+                        div.game-poster(style=`background-image: url(/images/game-placeholder.png`)
+        else
+            p.no-games There are no games available on this console.
 
-    hr
-    p 
-        a(href=gameConsole.url+'/delete') Delete console
-    p 
-        a(href=gameConsole.url+'/update') Update console
+    div.console-btns-container
+        a(href=gameConsole.url+'/update' class='upd-del-btn') Update console
+        a(href=gameConsole.url+'/delete' class='upd-del-btn') Delete console

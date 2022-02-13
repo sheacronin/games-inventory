@@ -67,6 +67,10 @@ nav a {
     text-decoration: none;
 }
 
+nav a:hover {
+    text-decoration: underline;
+}
+
 nav li a {
     text-transform: uppercase;
     display: flex;
@@ -171,6 +175,12 @@ main h1 {
     text-decoration: none;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
     border-radius: 20px 20px 0 0;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.game a:hover {
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
+    text-decoration: underline;
 }
 
 .game h2 {
@@ -194,6 +204,12 @@ main h1 {
     align-items: center;
     padding: 30px;
     position: relative;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+}
+
+.console h2 {
+    font-size: 26px;
 }
 
 .developer {
@@ -202,7 +218,52 @@ main h1 {
     top: 20px;
 }
 
+/* Welcome Screen */
+.welcome {
+    margin: 20px auto 0 auto;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.welcome div {
+    padding-left: 40px;
+    display: grid;
+    align-items: space-between;
+    grid-template-rows: 1fr 2fr;
+    gap: 20px;
+}
+
+.welcome ul {
+    display: grid;
+    align-items: start;
+    gap: 20px;
+}
+
+.welcome li {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.welcome img {
+    width: 100%;
+}
+
+@media (max-width: 700px) {
+    .welcome {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome div {
+        padding: 0;
+    }
+}
+
 /* Game Detail */
+
 .game-detail {
     display: grid;
     max-width: 650px;
@@ -252,7 +313,7 @@ main h1 {
     grid-area: consoles;
 }
 
-.game-btns {
+.upd-del-btn {
     padding: 15px 10px;
     border-radius: 20px;
     background-color: var(--primary-color);
@@ -265,7 +326,7 @@ main h1 {
         box-shadow 0.3s ease-in-out;
 }
 
-.game-btns:hover {
+.upd-del-btn:hover {
     background-color: var(--primary-color-dark);
     transform: translateY(5px);
     box-shadow: none;
@@ -277,6 +338,20 @@ main h1 {
 
 .delete-game-btn {
     grid-area: delete;
+}
+
+/* Console Detail */
+.console-btns-container {
+    max-width: 650px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+.no-games {
+    grid-column: 1 / -1;
+    text-align: center;
 }
 
 /* Forms */
