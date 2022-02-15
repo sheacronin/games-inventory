@@ -198,10 +198,9 @@ main h1 {
 
 .console {
     background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    display: grid;
     align-items: center;
+    grid-template-rows: 1fr 4fr;
     padding: 30px;
     position: relative;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
@@ -210,6 +209,7 @@ main h1 {
 
 .console h2 {
     font-size: 26px;
+    justify-self: center;
 }
 
 .developer {
@@ -230,8 +230,8 @@ main h1 {
 .welcome div {
     padding-left: 40px;
     display: grid;
-    align-items: space-between;
-    grid-template-rows: 1fr 2fr;
+    align-items: start;
+    max-height: 500px;
     gap: 20px;
 }
 
@@ -345,7 +345,7 @@ main h1 {
     max-width: 650px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 20px auto;
+    margin: 40px auto 20px auto;
     gap: 20px;
 }
 
@@ -392,6 +392,16 @@ form button {
     border: none;
     background-color: var(--primary-color);
     color: white;
+    border-radius: 20px;
+    box-shadow: 0 5px var(--primary-color-dark);
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-out,
+        box-shadow 0.3s ease-in-out;
+}
+
+form button:hover {
+    background-color: var(--primary-color-dark);
+    transform: translateY(5px);
+    box-shadow: none;
 }
 
 fieldset {
@@ -409,4 +419,25 @@ fieldset input {
     width: 20px;
     height: 20px;
     margin-right: 10px;
+}
+
+/* Delete Pages */
+
+.delete-info {
+    max-width: 550px;
+    margin: 20px auto;
+    line-height: 1.5;
+}
+
+.delete-info p {
+    margin: 20px 0;
+}
+
+.delete-form {
+    background: none;
+    box-shadow: none;
+}
+
+.warning-text {
+    color: var(--primary-color);
 }

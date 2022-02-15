@@ -4,9 +4,10 @@ block content
 
     h1= game.name
 
-    p Do you really want to delete this game?
+    div.delete-info
+        p Do you really want to delete this game?
 
-    form(method='POST' action='')   
+    form.delete-form(method='POST' action='')   
         input#gameid(type='hidden', name='gameid', required='true', value=game._id)
 
         button(type='submit') Delete
