@@ -87,13 +87,15 @@ exports.gameCreatePost = [
     (req, res, next) => {
         const errors = validationResult(req);
 
+        const posterFileName = req.file ? req.file.filename : null;
+
         const game = new Game({
             name: req.body.name,
             description: req.body.description,
             gameConsoles: req.body.gameConsoles,
             price: req.body.price,
             numberInStock: req.body.numberInStock,
-            posterFileName: req.file.filename,
+            posterFileName,
         });
 
         if (!errors.isEmpty()) {
@@ -236,9 +238,12 @@ exports.gameUpdatePost = [
             gameConsoles: req.body.gameConsoles,
             price: req.body.price,
             numberInStock: req.body.numberInStock,
-            posterFileName: req.file.filename,
             _id: req.params.id,
         });
+
+        if (req.file) {
+            game.posterFileName = req.file.filename;
+        }
 
         if (!errors.isEmpty()) {
             GameConsole.find({}, 'name').exec((err, gameConsoles) => {
@@ -261,17 +266,21 @@ exports.gameUpdatePost = [
         } else {
             Game.findById(req.params.id).exec((err, oldGame) => {
                 if (err) return next(err);
-                // Remove old poster image.
                 if (oldGame.posterFileName) {
-                    const oldImagePath = path.join(
-                        __dirname,
-                        '../public/images/',
-                        oldGame.posterFileName
-                    );
+                    // Remove old poster image if it's replaced with new one.
+                    if (game.posterFileName) {
+                        const oldImagePath = path.join(
+                            __dirname,
+                            '../public/images/',
+                            oldGame.posterFileName
+                        );
 
-                    fs.unlink(oldImagePath, (err) => {
-                        console.log(err);
-                    });
+                        fs.unlink(oldImagePath, (err) => {
+                            console.log(err);
+                        });
+                    } else {
+                        game.posterFileName = oldGame.posterFileName;
+                    }
                 }
             });
 
