@@ -2,7 +2,7 @@ extends layout
 
 block content 
 
-    h1= gameConsole.name
+    h1!= gameConsole.name
 
     div.delete-info
         p Do you really want to delete this console?
@@ -11,9 +11,9 @@ block content
             ul
             for game in consoleGames 
                 if (game.gameConsoles.length === 1) 
-                    li.warning-text #{game.name}*
+                    li.warning-text !{game.name}*
                 else
-                    li= game.name
+                    li!= game.name
         
         p Games marked with #[span.warning-text *] will be deleted, as they are not available on any other consoles.
 

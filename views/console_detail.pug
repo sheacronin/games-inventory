@@ -3,13 +3,13 @@ extends layout
 block content 
 
     p= gameConsole.developer
-    h1= title
+    h1!= title
 
     section(class='games-list')
         each game in games
             div.game
                 a(href=game.url)
-                    h2 #{game.name} 
+                    h2!= game.name 
                     if (game.posterFileName)
                         div.game-poster(style=`background-image: url(/images/${game.posterFileName}`)
                     else 

@@ -191,24 +191,14 @@ exports.gameConsoleUpdatePost = [
             });
             return;
         } else {
-            GameConsole.findOne({ name: gameConsole.name }).exec(
-                (err, foundGameConsole) => {
+            GameConsole.findByIdAndUpdate(
+                req.params.id,
+                gameConsole,
+                {},
+                (err, thegameConsole) => {
                     if (err) return next(err);
 
-                    if (foundGameConsole) {
-                        res.redirect(foundGameConsole.url);
-                    } else {
-                        GameConsole.findByIdAndUpdate(
-                            req.params.id,
-                            gameConsole,
-                            {},
-                            (err, thegameConsole) => {
-                                if (err) return next(err);
-
-                                res.redirect(thegameConsole.url);
-                            }
-                        );
-                    }
+                    res.redirect(thegameConsole.url);
                 }
             );
         }

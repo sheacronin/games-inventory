@@ -2,12 +2,12 @@ extends layout
 
 block content 
 
-    h1= title 
+    h1!= title 
 
     div.games-list
         each gameConsole in gameConsoles
             div.console
                 h2
-                    a(href=gameConsole.url) #{gameConsole.name} 
+                    a(href=gameConsole.url) !{gameConsole.name} 
                 p.developer= gameConsole.developer
-                p= gameConsole.description
+                p!= gameConsole.description

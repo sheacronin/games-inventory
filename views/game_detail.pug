@@ -2,13 +2,13 @@ extends layout
 
 block content 
 
-    h1= title
+    h1!= title
     section(class='game-detail')
         if (game.posterFileName)
             img(src=('/images/' + game.posterFileName) alt='')
         else 
             img(src='/images/game-placeholder.png' alt='')
-        p(class='game-description')= game.description 
+        p(class='game-description')!= game.description 
         p(class='price') Price: $#{game.price}
         p(class='stock') In Stock: #{game.numberInStock}
         
@@ -17,7 +17,7 @@ block content
             ul
                 each console in game.gameConsoles
                     li
-                        a(href=console.url) #{console.name}
+                        a(href=console.url) !{console.name}
         a(href=game.url+'/update' class='update-game-btn upd-del-btn') Update game
         a(href=game.url+'/delete' class='delete-game-btn upd-del-btn') Delete game 
             

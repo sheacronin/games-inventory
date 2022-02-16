@@ -8,7 +8,7 @@ block content
         each game in games
             div.game
                 a(href=game.url)
-                    h2 #{game.name} 
+                    h2!= game.name
                     if (game.posterFileName)
                         div.game-poster(style=`background-image: url(/images/${game.posterFileName}`)
                     else 

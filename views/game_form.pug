@@ -6,13 +6,13 @@ block content
 
     form(method='POST' action='' enctype='multipart/form-data')
         label(for='name') Game Name:
-        input#name(type='text' name='name' value=(game === undefined ? '' : game.name) required='true')
+        input#name(type='text' name='name' value!=(game === undefined ? '' : game.name) required='true')
 
         label(for='poster') Game Poster: 
         input#poster(type='file' name='poster' accept='image/png, image/jpeg')
 
         label(for='description') Description of Game:
-        textarea#description(name='description' required='true') #{game === undefined ? '' : game.description}
+        textarea#description(name='description' required='true') !{game === undefined ? '' : game.description}
 
         label(for='price') Price of Game (in US Dollars):
         input#price(type='number' name='price' step='5' value=(game === undefined ? 0 : game.price) required='true')
