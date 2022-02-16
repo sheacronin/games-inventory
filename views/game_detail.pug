@@ -5,7 +5,7 @@ block content
     h1!= title
     section(class='game-detail')
         if (game.posterFileName)
-            img(src=('/images/' + game.posterFileName) alt='')
+            img(src=('/file/' + game.posterFileName) alt='')
         else 
             img(src='/images/game-placeholder.png' alt='')
         p(class='game-description')!= game.description 

@@ -10,6 +10,6 @@ block content
                 a(href=game.url)
                     h2!= game.name
                     if (game.posterFileName)
-                        div.game-poster(style=`background-image: url(/images/${game.posterFileName}`)
+                        div.game-poster(style=`background-image: url(/file/${game.posterFileName}`)
                     else 
                         div.game-poster(style=`background-image: url(/images/game-placeholder.png`)

@@ -5,6 +5,30 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 const path = require('path');
 
+const { db } = require('../db-connection');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+let gfs, gridfsBucket;
+db.once('open', () => {
+    gridfsBucket = new mongoose.mongo.GridFSBucket(db.db, {
+        bucketName: 'posters',
+    });
+
+    gfs = Grid(db.db, mongoose.mongo);
+    gfs.collection('posters');
+});
+
+exports.file = async (req, res) => {
+    try {
+        const file = await gfs.files.findOne({ filename: req.params.filename });
+        const readStream = gridfsBucket.openDownloadStreamByName(file.filename);
+        readStream.pipe(res);
+    } catch (error) {
+        console.log(error);
+        res.send('not found');
+    }
+};
+
 exports.index = (req, res) => {
     async.parallel(
         {
@@ -269,15 +293,12 @@ exports.gameUpdatePost = [
                 if (oldGame.posterFileName) {
                     // Remove old poster image if it's replaced with new one.
                     if (game.posterFileName) {
-                        const oldImagePath = path.join(
-                            __dirname,
-                            '../public/images/',
-                            oldGame.posterFileName
+                        gfs.files.deleteOne(
+                            { filename: oldGame.posterFileName },
+                            (err) => {
+                                if (err) return next(err);
+                            }
                         );
-
-                        fs.unlink(oldImagePath, (err) => {
-                            console.log(err);
-                        });
                     } else {
                         game.posterFileName = oldGame.posterFileName;
                     }

@@ -26,7 +26,7 @@ block content
             for gameConsole in gameConsoles 
                 div
                     input(type='checkbox' name='gameConsoles' id=gameConsole._id value=gameConsole._id checked=gameConsole.checked)
-                    label(for=gameConsole._id) #{gameConsole.name}
+                    label(for=gameConsole._id) !{gameConsole.name}
 
         button(type='submit') Submit Game
 

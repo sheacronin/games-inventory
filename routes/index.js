@@ -5,13 +5,16 @@ const gameConsoleController = require('../controllers/gameConsoleController');
 const path = require('path');
 
 const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const { db } = require('../db-connection');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../public/images'));
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '_' + file.originalname);
+const storage = new GridFsStorage({
+    db: db,
+    file: (req, file) => {
+        return {
+            filename: Date.now() + '_' + file.originalname,
+            bucketName: 'posters',
+        };
     },
 });
 
@@ -19,6 +22,9 @@ const upload = multer({ storage: storage });
 
 /* GET home page. */
 router.get('/', gameController.index);
+
+// Get files
+router.get('/file/:filename', gameController.file);
 
 // Game Consoles
 
